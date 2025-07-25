@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tcket_Generator</title>
+    <link id="style" rel="stylesheet" href="regular.css">
+</head>
+<body>
+<body>
+  <!-- ── POPUP MODAL ───────────────────────── -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <div id="popup-icon" class="popup-icon"></div>
+      <p id="popup-message"></p>
+    </div>
+  </div>
+
+  <!-- ── TOP CONTROLS ─────────────────── -->
+  <div class="control_panel">
+    <div class="control_left">
+      <div class="heading">
+        <h1>Get Your <br />Blizz Media <br />Event Tickets</h1>
+      </div>
+      <div id="payment-info"></div>
+    </div>
+    <div class="control_right">
+      <input type="text" id="ref" placeholder="Enter payment ref…" />
+      <button id="generate-ticket">Get Ticket</button>
+      <button id="download-ticket">Download Ticket</button>
+<button id="download-pdf">Download PDF</button>
+
+    </div>
+  </div>
+
+  <!-- ── TICKET PREVIEW ───────────────── -->
+  <div class="preview"> 
+    <div id="ticketBox">
+    <div class="qrContainer">
+  <div id="qrcode"></div>
+</div>
+
+      <div class="Info_Space">
+        <p id="code">Code</p>
+        <h2 id="name">Holder Name</h2>
+        <div id="number">Buyer Number</div>
+        <div id="email">holderemail@gmail.com</div>
+        <div class="venue">Akroma Plaza</div>
+        <div class="venue">24th October 2025, 6:00PM</div>
+        <p id="tictype">REGULAR</p>
+        <p id="purch">Purchased at …</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="crypto-js.js"></script>
+  <script src="qrcode.min.js"></script>
+  <script src="paystack.js"></script>
+  <script type="module" src="index.js"></script>
+</body>
+
+<script src="crypto-js.js"></script>
+<script src="qrcode.min.js"></script>
+<script src="jspdf.umd.min.js"></script>
+<script src="html2canvas.min.js"></script>
+<script src="paystack.js"></script>
+<script type="module" src="index.js"></script>
+</html>
