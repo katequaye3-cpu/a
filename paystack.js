@@ -78,8 +78,13 @@ async function verifyPayment(reference) {
     // encrypt & store ticket
     const secret    = 'Made_By_BM';
     const encrypted = CryptoJS.AES.encrypt(JSON.stringify(info), secret).toString();
-    const dbPath    = `Unused/${info.name}'s ticket ID ${ticketID.slice(-6)}`;
-    addDataToDatabase(dbPath, { code: info });
+    const dbPath    = `${info.name}'s ticket ID ${ticketID.slice(-6)}`;
+    checkAndAddToDatabase(dbPath, { code: info })
+  .then(existingOrNew => {
+    console.log('DB record:', existingOrNew);
+  })
+  .catch(err => { /* handle error if needed */ });
+
 
     // generate QR with encrypted payload
     generateQR(encrypted);
@@ -140,20 +145,42 @@ function generateQR(payload) {
 }
 
 // ── DATABASE HELPERS ───────────────────────────────────────
-function addDataToDatabase(path, data) {
-  const dbRef = ref(db, path);
-  get(dbRef)
-    .then(snapshot => {
-      if (!snapshot.exists()) {
-        set(dbRef, data)
-          .then(() => showPopup('success', 'Ticket saved'))
-          .catch(() => showPopup('error', 'Save failed'));
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      showPopup('error', 'DB check failed');
-    });
+/**
+ * Checks both 'Used' and 'Unused' for a ticket key.
+ * If found, returns the existing record.
+ * Otherwise writes under 'Unused' and returns the new data.
+ */
+async function checkAndAddToDatabase(key, data) {
+  showPopup('load', 'Checking database…');
+
+  const usedRef   = ref(db, `Used/${key}`);
+  const unusedRef = ref(db, `Unused/${key}`);
+
+  try {
+    // 1) Look for a Used ticket
+    const usedSnap = await get(usedRef);
+    if (usedSnap.exists()) {
+      showPopup('success', 'Ticket already marked used');
+      return usedSnap.val();
+    }
+
+    // 2) Look for an Unused ticket
+    const unusedSnap = await get(unusedRef);
+    if (unusedSnap.exists()) {
+      showPopup('success', 'Ticket already generated');
+      return unusedSnap.val();
+    }
+
+    // 3) Not in either—write under Unused
+    await set(unusedRef, data);
+    showPopup('success', 'Ticket saved');
+    return data;
+
+  } catch (err) {
+    console.error(err);
+    showPopup('error', 'DB operation failed');
+    throw err;
+  }
 }
 
 // ── DOWNLOAD HELPERS ───────────────────────────────────────
