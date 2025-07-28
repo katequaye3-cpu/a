@@ -85,14 +85,48 @@ body {
   color: var(--bg-primary);
 }
 
-/* ── TICKET PREVIEW ───────────────────────── */
+  /* ── TICKET PREVIEW ───────────────────────── */
+  /* ── 1. Ensure both originals & clones use .ticket ── */
+/* In JS: when you clone, do clone.classList.add('ticket', 'clone'); */
+/* And in your HTML, give the original <div id="ticketBox"> the class "ticket": */
+#ticketBox { /*…*/ }
+#ticketBox.ticket { /* nothing special here—just markers for CSS */ }
+
+/* ── 2. Responsive container ─────────────────────────── */
 .preview {
-  flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  background: var(--bg-primary);
+  flex-wrap: wrap;            /* allow wrapping to next row */
+  justify-content: center;    /* center tickets horizontally */
+  gap: 20px;                  /* consistent gutter between cards */
+  padding: 2rem;              /* preserve existing padding */
+}
+
+/* each ticket takes up to 50% of container minus gap, but never more than 480px */
+.preview > .ticket {
+  flex: 1 1 calc(50% - 20px);
+  max-width: 480px;
+  width: 100%;
+}
+
+/* ── 3. Force vertical on small screens ───────────── */
+@media (max-width: 768px) {
+  .preview {
+    flex-direction: column;   /* strict single column */
+    align-items: center;
+  }
+
+  .preview > .ticket {
+    flex: none;               /* drop flex sizing */
+    width: 90%;               /* fill most of viewport */
+    max-width: none;          /* let width:90% rule take over */
+  }
+
+  /* if you’re using aspect-ratio on #ticketBox, disable it below */
+  #ticketBox,
+  .preview > .clone {
+    aspect-ratio: auto !important;
+    height: auto !important;
+  }
 }
 
 /* ── TICKET CARD ─────────────────────────── */
