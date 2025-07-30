@@ -36,7 +36,7 @@
 async function verifyPayment(reference) {
   showPopup('load', 'Verifying payment…');
 
-  const secretKey = 'pk_test_b471ee2b1372d9a277e09b93d0cb1e52db3dfba9';
+  const secretKey = 'sk_test_65b426e3ed57bad58395a500bf68f17cf50e3df4';
   const url       = `https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`;
 
   try {
